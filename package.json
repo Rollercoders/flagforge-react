@@ -23,6 +23,7 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
+  "type": "module",
   "packageManager": "yarn@4.9.1",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
