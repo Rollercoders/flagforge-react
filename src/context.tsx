@@ -15,6 +15,8 @@ export interface FlagForgeState {
   _lazyCache: Record<string, boolean>;
   _setLazyCache: (key: string, value: boolean) => void;
   _setError: (err: Error) => void;
+  _inFlight: Set<string>;
+  _setInFlight: (key: string) => void;
   host: string;
   apiKey: string;
   context: FlagContext;
@@ -50,10 +52,15 @@ export function FlagForgeProvider({
   const [loading, setLoading] = useState(mode === "eager");
   const [error, setError] = useState<Error | null>(null);
   const [lazyCache, setLazyCache] = useState<Record<string, boolean>>({});
+  const inFlightRef = useRef<Set<string>>(new Set());
   const isFirstFetch = useRef(true);
 
   function setLazyCacheKey(key: string, value: boolean) {
     setLazyCache((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function setInFlight(key: string) {
+    inFlightRef.current.add(key);
   }
 
   const contextKey = JSON.stringify(context);
@@ -99,6 +106,8 @@ export function FlagForgeProvider({
     _lazyCache: lazyCache,
     _setLazyCache: setLazyCacheKey,
     _setError: (err) => setError(err),
+    _inFlight: inFlightRef.current,
+    _setInFlight: setInFlight,
     host,
     apiKey,
     context,
