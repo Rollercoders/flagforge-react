@@ -8,6 +8,7 @@ import {
   FlagGate,
 } from "flagforge-react";
 import { FLAGFORGE_HOST, FLAGFORGE_API_KEY, FLAGFORGE_FLAGS } from "./env";
+import "./App.css";
 
 const firstFlag = FLAGFORGE_FLAGS[0] ?? "example-flag";
 
@@ -15,32 +16,31 @@ export function App() {
   const [mode, setMode] = useState<"eager" | "lazy">("eager");
 
   return (
-    <div style={{ fontFamily: "monospace", padding: "2rem", maxWidth: "800px" }}>
-      <h1>flagforge-react — API demo</h1>
+    <div className="app">
+      <header className="header">
+        <div className="header-logo" />
+        <div>
+          <div className="header-title">flagforge-react</div>
+          <div className="header-sub">API demo</div>
+        </div>
+        <span className="badge-live">live</span>
+      </header>
 
-      <section style={sectionStyle}>
-        <h2>Mode</h2>
-        <label>
-          <input
-            type="radio"
-            name="mode"
-            value="eager"
-            checked={mode === "eager"}
-            onChange={() => setMode("eager")}
-          />{" "}
-          eager (fetches all flags on mount)
-        </label>{" "}
-        <label>
-          <input
-            type="radio"
-            name="mode"
-            value="lazy"
-            checked={mode === "lazy"}
-            onChange={() => setMode("lazy")}
-          />{" "}
-          lazy (fetches each flag on first use)
-        </label>
-      </section>
+      <div className="mode-toggle">
+        <span className="mode-label">mode:</span>
+        <button
+          className={"mode-btn" + (mode === "eager" ? " active" : "")}
+          onClick={() => setMode("eager")}
+        >
+          eager
+        </button>
+        <button
+          className={"mode-btn" + (mode === "lazy" ? " active" : "")}
+          onClick={() => setMode("lazy")}
+        >
+          lazy
+        </button>
+      </div>
 
       <FlagForgeProvider
         key={mode}
@@ -69,72 +69,101 @@ function Sections() {
 function RawStateSection() {
   const { flags, loading, error } = useFlagForge();
   return (
-    <section style={sectionStyle}>
-      <h2>useFlagForge()</h2>
-      <p>loading: {String(loading)}</p>
-      <p>error: {error ? error.message : "null"}</p>
-      <p>flags:</p>
-      <pre style={preStyle}>{JSON.stringify(flags, null, 2)}</pre>
-    </section>
+    <div className="section">
+      <div className="section-label">hook</div>
+      <div className="section-title">useFlagForge()</div>
+      <div className="status-row">
+        <span className="status-key">loading</span>
+        <span>{String(loading)}</span>
+      </div>
+      <div className="status-row">
+        <span className="status-key">error</span>
+        <span>{error ? error.message : "null"}</span>
+      </div>
+      <div className="status-row" style={{ marginBottom: "8px" }}>
+        <span className="status-key">flags</span>
+      </div>
+      <div className="code-block">{JSON.stringify(flags, null, 2)}</div>
+    </div>
   );
 }
 
 function SingleFlagSection() {
   const enabled = useFlag(firstFlag);
   return (
-    <section style={sectionStyle}>
-      <h2>useFlag("{firstFlag}")</h2>
-      <p>
-        enabled: <strong>{String(enabled)}</strong>
-      </p>
-    </section>
+    <div className="section">
+      <div className="section-label">hook</div>
+      <div className="section-title">useFlag("{firstFlag}")</div>
+      <div className="flag-row">
+        <span className="flag-key">{firstFlag}</span>
+        {enabled
+          ? <span className="flag-true">true</span>
+          : <span className="flag-false">false</span>}
+      </div>
+    </div>
   );
 }
 
 function MultiFlagSection() {
   const flagMap = useFlags(FLAGFORGE_FLAGS);
   return (
-    <section style={sectionStyle}>
-      <h2>useFlags([{FLAGFORGE_FLAGS.map((f) => `"${f}"`).join(", ")}])</h2>
-      <pre style={preStyle}>{JSON.stringify(flagMap, null, 2)}</pre>
-    </section>
+    <div className="section">
+      <div className="section-label">hook</div>
+      <div className="section-title">
+        useFlags([{FLAGFORGE_FLAGS.map((f) => `"${f}"`).join(", ")}])
+      </div>
+      {Object.entries(flagMap).map(([key, value]) => (
+        <div key={key} className="flag-row">
+          <span className="flag-key">{key}</span>
+          {value
+            ? <span className="flag-true">true</span>
+            : <span className="flag-false">false</span>}
+        </div>
+      ))}
+      {FLAGFORGE_FLAGS.length === 0 && (
+        <div className="code-block">{"{}"}</div>
+      )}
+    </div>
   );
 }
 
 function FeatureFlagSection() {
+  const enabled = useFlag(firstFlag);
   return (
-    <section style={sectionStyle}>
-      <h2>{"<FeatureFlag flag=\"" + firstFlag + "\">"}</h2>
+    <div className="section">
+      <div className="section-label">component</div>
+      <div className="section-title">{"<FeatureFlag flag=\"" + firstFlag + "\">"}</div>
       <FeatureFlag flag={firstFlag}>
-        <p style={{ color: "green" }}>Flag is enabled — this content is visible.</p>
+        <div className="demo-box demo-box-enabled">
+          Flag is enabled — children rendered.
+        </div>
       </FeatureFlag>
-    </section>
+      {!enabled && (
+        <div className="demo-box demo-box-empty">
+          Flag is disabled — nothing rendered.
+        </div>
+      )}
+    </div>
   );
 }
 
 function FlagGateSection() {
   return (
-    <section style={sectionStyle}>
-      <h2>{"<FlagGate flag=\"" + firstFlag + "\" fallback={…}>"}</h2>
+    <div className="section">
+      <div className="section-label">component</div>
+      <div className="section-title">{"<FlagGate flag=\"" + firstFlag + "\" fallback={…}>"}</div>
       <FlagGate
         flag={firstFlag}
-        fallback={<p style={{ color: "red" }}>Flag is disabled — showing fallback.</p>}
+        fallback={
+          <div className="demo-box demo-box-disabled">
+            Flag is disabled — fallback rendered.
+          </div>
+        }
       >
-        <p style={{ color: "green" }}>Flag is enabled — showing children.</p>
+        <div className="demo-box demo-box-enabled">
+          Flag is enabled — children rendered.
+        </div>
       </FlagGate>
-    </section>
+    </div>
   );
 }
-
-const sectionStyle: React.CSSProperties = {
-  borderTop: "1px solid #ccc",
-  paddingTop: "1rem",
-  marginTop: "1rem",
-};
-
-const preStyle: React.CSSProperties = {
-  background: "#f4f4f4",
-  padding: "0.5rem",
-  borderRadius: "4px",
-  overflowX: "auto",
-};
