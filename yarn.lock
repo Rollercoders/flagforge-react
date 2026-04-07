@@ -1786,6 +1786,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"flagforge-react-example-basic@workspace:examples/basic":
+  version: 0.0.0-use.local
+  resolution: "flagforge-react-example-basic@workspace:examples/basic"
+  dependencies:
+    "@types/react": "npm:^18.2.0"
+    "@types/react-dom": "npm:^18.2.0"
+    "@vitejs/plugin-react": "npm:^4.2.1"
+    flagforge-react: "file:../.."
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
+    typescript: "npm:^5.4.0"
+    vite: "npm:^5.2.0"
+  languageName: unknown
+  linkType: soft
+
+"flagforge-react@file:../..::locator=flagforge-react-example-basic%40workspace%3Aexamples%2Fbasic":
+  version: 0.1.0
+  resolution: "flagforge-react@file:../..#../..::hash=28026a&locator=flagforge-react-example-basic%40workspace%3Aexamples%2Fbasic"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 10c0/5f95aac28180398e44fc5b26178b23eb93fd4035b8931ce68af1b692bb1c5f1686c625525b81c3c20373360698a3c0653d185796128c0dd0b4208d403d2f2e3d
+  languageName: node
+  linkType: hard
+
 "flagforge-react@workspace:.":
   version: 0.0.0-use.local
   resolution: "flagforge-react@workspace:."
