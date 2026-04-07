@@ -1803,11 +1803,11 @@ __metadata:
 
 "flagforge-react@file:../..::locator=flagforge-react-example-basic%40workspace%3Aexamples%2Fbasic":
   version: 0.1.0
-  resolution: "flagforge-react@file:../..#../..::hash=28026a&locator=flagforge-react-example-basic%40workspace%3Aexamples%2Fbasic"
+  resolution: "flagforge-react@file:../..#../..::hash=92733b&locator=flagforge-react-example-basic%40workspace%3Aexamples%2Fbasic"
   peerDependencies:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: 10c0/5f95aac28180398e44fc5b26178b23eb93fd4035b8931ce68af1b692bb1c5f1686c625525b81c3c20373360698a3c0653d185796128c0dd0b4208d403d2f2e3d
+  checksum: 10c0/ae4b2149116f339d92616e8ee76a1142ee2dd8f6db8fa9bb60c490600cb56359f68e180da635c8842aa4c4a30182200a8566fb9e908c9d62e640d7fdc2485bd1
   languageName: node
   linkType: hard
 
