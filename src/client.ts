@@ -27,12 +27,11 @@ export async function fetchAllFlags(
   apiKey: string,
   context: FlagForgeContext
 ): Promise<Record<string, boolean>> {
-  const data = await post<{ flags: Record<string, boolean> }>(
+  return post<Record<string, boolean>>(
     `${host}/api/evaluate/all`,
     apiKey,
     { context }
   );
-  return data.flags;
 }
 
 export async function fetchFlag(
