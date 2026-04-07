@@ -22,6 +22,7 @@ From the repo root:
 
 ```sh
 yarn install
+yarn build          # build the library first
 cd examples/basic
 yarn dev
 ```

@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "React client library for FlagForge feature flags",
   "main": "./dist/flagforge-react.umd.js",
-  "module": "./dist/flagforge-react.es.js",
+  "module": "./dist/flagforge-react.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/flagforge-react.es.js",
+      "import": "./dist/flagforge-react.mjs",
       "require": "./dist/flagforge-react.umd.js"
     }
   },
