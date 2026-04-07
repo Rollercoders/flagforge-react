@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "React client library for FlagForge feature flags",
   "main": "./dist/flagforge-react.umd.js",
-  "module": "./dist/flagforge-react.es.js",
+  "module": "./dist/flagforge-react.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/flagforge-react.es.js",
-      "require": "./dist/flagforge-react.umd.js"
+      "import": "./dist/flagforge-react.js",
+      "require": "./dist/flagforge-react.umd.cjs"
     }
   },
   "files": [
@@ -25,6 +25,9 @@
   },
   "type": "module",
   "packageManager": "yarn@4.9.1",
+  "workspaces": [
+    "examples/*"
+  ],
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.2",
