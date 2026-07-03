@@ -8,7 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "flagforge-react": "file:../..",
+    "@rollercoders/flagforge-react": "file:../..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

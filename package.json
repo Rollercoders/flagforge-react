@@ -1,12 +1,30 @@
 {
-  "name": "flagforge-react",
+  "name": "@rollercoders/flagforge-react",
   "version": "0.1.0",
   "description": "React client library for FlagForge feature flags",
-  "main": "./dist/flagforge-react.umd.js",
+  "license": "MIT",
+  "author": "Rollercoders",
+  "homepage": "https://github.com/Rollercoders/flagforge-react#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rollercoders/flagforge-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Rollercoders/flagforge-react/issues"
+  },
+  "keywords": [
+    "flagforge",
+    "feature-flags",
+    "feature-toggles",
+    "react",
+    "react-hooks"
+  ],
+  "main": "./dist/flagforge-react.umd.cjs",
   "module": "./dist/flagforge-react.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/flagforge-react.js",
       "require": "./dist/flagforge-react.umd.cjs"
     }
@@ -14,10 +32,15 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "yarn test && yarn build"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
