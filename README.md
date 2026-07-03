@@ -5,13 +5,13 @@ React client library for FlagForge feature flags.
 ## Installation
 
 ```bash
-yarn add flagforge-react
+yarn add @rollercoders/flagforge-react
 ```
 
 ## Quick Start
 
 ```tsx
-import { FlagForgeProvider, useFlag, FeatureFlag, FlagGate } from "flagforge-react";
+import { FlagForgeProvider, useFlag, FeatureFlag, FlagGate } from "@rollercoders/flagforge-react";
 
 function App() {
   return (

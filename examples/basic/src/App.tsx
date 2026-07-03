@@ -6,7 +6,7 @@ import {
   useFlags,
   FeatureFlag,
   FlagGate,
-} from "flagforge-react";
+} from "@rollercoders/flagforge-react";
 import { FLAGFORGE_HOST, FLAGFORGE_API_KEY, FLAGFORGE_FLAGS } from "./env";
 import "./App.css";
 
