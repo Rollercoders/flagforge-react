@@ -1,6 +1,6 @@
 {
   "name": "@rollercoders/flagforge-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React client library for FlagForge feature flags",
   "license": "MIT",
   "author": "Rollercoders",

@@ -74,7 +74,7 @@ export function FlagForgeProvider({
       try {
         const result = await fetchAllFlags(host, apiKey, context);
         if (!cancelled) {
-          setFlags(result);
+          setFlags(result && typeof result === "object" ? result : {});
           setError(null);
           if (isInitial) setLoading(false);
         }

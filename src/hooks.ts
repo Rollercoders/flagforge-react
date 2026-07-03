@@ -4,7 +4,7 @@ import { fetchFlag } from "./client";
 
 export function useFlagForge() {
   const { flags, loading, error } = useFlagForgeCtx();
-  return { flags, loading, error };
+  return { flags: flags ?? {}, loading, error };
 }
 
 export function useFlag(key: string): boolean {
@@ -28,18 +28,20 @@ export function useFlag(key: string): boolean {
   }, [key, ctx.mode]);
 
   if (ctx.mode === "lazy") {
-    return ctx._lazyCache[key] ?? false;
+    return (ctx._lazyCache ?? {})[key] ?? false;
   }
 
-  return ctx.flags[key] ?? false;
+  return (ctx.flags ?? {})[key] ?? false;
 }
 
 export function useFlags(keys: string[]): Record<string, boolean> {
   const ctx = useFlagForgeCtx();
 
   if (ctx.mode === "lazy") {
-    return Object.fromEntries(keys.map((k) => [k, ctx._lazyCache[k] ?? false]));
+    const cache = ctx._lazyCache ?? {};
+    return Object.fromEntries(keys.map((k) => [k, cache[k] ?? false]));
   }
 
-  return Object.fromEntries(keys.map((k) => [k, ctx.flags[k] ?? false]));
+  const flags = ctx.flags ?? {};
+  return Object.fromEntries(keys.map((k) => [k, flags[k] ?? false]));
 }

@@ -29,6 +29,28 @@ describe("fetchAllFlags", () => {
     expect(result).toEqual({ "flag-a": true, "flag-b": false });
   });
 
+  it("returns the flat flag map when server responds without a `flags` wrapper", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ "flag-a": true, "flag-b": false }),
+    });
+
+    const result = await fetchAllFlags(HOST, API_KEY, CONTEXT);
+
+    expect(result).toEqual({ "flag-a": true, "flag-b": false });
+  });
+
+  it("returns an empty object when the response is not an object", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => null,
+    });
+
+    const result = await fetchAllFlags(HOST, API_KEY, CONTEXT);
+
+    expect(result).toEqual({});
+  });
+
   it("throws when response is not ok", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
