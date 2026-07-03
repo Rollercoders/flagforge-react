@@ -27,12 +27,20 @@ export async function fetchAllFlags(
   apiKey: string,
   context: FlagForgeContext
 ): Promise<Record<string, boolean>> {
-  const data = await post<{ flags: Record<string, boolean> }>(
-    `${host}/api/evaluate/all`,
-    apiKey,
-    { context }
-  );
-  return data.flags;
+  const data = await post<
+    Record<string, boolean> | { flags: Record<string, boolean> }
+  >(`${host}/api/evaluate/all`, apiKey, { context });
+
+  if (!data || typeof data !== "object") return {};
+
+  // The server returns the flat flag map (`{ "my-flag": true }`), but older
+  // versions wrapped it as `{ flags: { "my-flag": true } }`. Support both.
+  const flags =
+    "flags" in data && data.flags && typeof data.flags === "object"
+      ? data.flags
+      : data;
+
+  return (flags as Record<string, boolean>) ?? {};
 }
 
 export async function fetchFlag(

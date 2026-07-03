@@ -59,6 +59,81 @@ describe("useFlag — eager mode", () => {
     await waitFor(() => expect(screen.getByText("true")).toBeInTheDocument());
   });
 
+  it("returns true with a flat server response {my-flag: true}", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ "my-flag": true }),
+    });
+
+    function TestComp() {
+      const enabled = useFlag("my-flag");
+      return <div>{String(enabled)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() => expect(screen.getByText("true")).toBeInTheDocument());
+  });
+
+  it("returns false with a flat server response {my-flag: false}", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ "my-flag": false }),
+    });
+
+    function TestComp() {
+      const enabled = useFlag("my-flag");
+      return <div>{String(enabled)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() => expect(screen.getByText("false")).toBeInTheDocument());
+  });
+
+  it("returns true with a wrapped server response {flags: {my-flag: true}}", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ flags: { "my-flag": true } }),
+    });
+
+    function TestComp() {
+      const enabled = useFlag("my-flag");
+      return <div>{String(enabled)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() => expect(screen.getByText("true")).toBeInTheDocument());
+  });
+
+  it("returns false without crashing on an empty response {}", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    function TestComp() {
+      const enabled = useFlag("my-flag");
+      return <div>{String(enabled)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() => expect(screen.getByText("false")).toBeInTheDocument());
+  });
+
+  it("returns false without crashing when the fetch fails", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+    });
+
+    function TestComp() {
+      const enabled = useFlag("my-flag");
+      return <div>{String(enabled)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() => expect(screen.getByText("false")).toBeInTheDocument());
+  });
+
   it("returns false for unknown flag key", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
@@ -140,6 +215,25 @@ describe("useFlags — eager mode", () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ flags: { "flag-a": true, "flag-b": false, "flag-c": true } }),
+    });
+
+    function TestComp() {
+      const flags = useFlags(["flag-a", "flag-b"]);
+      return <div>{JSON.stringify(flags)}</div>;
+    }
+
+    render(<EagerWrapper><TestComp /></EagerWrapper>);
+    await waitFor(() =>
+      expect(
+        screen.getByText('{"flag-a":true,"flag-b":false}')
+      ).toBeInTheDocument()
+    );
+  });
+
+  it("maps requested keys with a flat server response", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ "flag-a": true, "flag-b": false, "flag-c": true }),
     });
 
     function TestComp() {
