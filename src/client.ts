@@ -27,9 +27,13 @@ export async function fetchAllFlags(
   apiKey: string,
   context: FlagForgeContext
 ): Promise<Record<string, boolean>> {
+  // The `/all` endpoint reads context fields at the body root
+  // (`body.userId`, `body.attributes`), not nested under `context`. Sending
+  // the flat context is required for targeting to apply. The nested
+  // `{ flags, context }` shape is only for the batch `POST /` endpoint.
   const data = await post<
     Record<string, boolean> | { flags: Record<string, boolean> }
-  >(`${host}/api/evaluate/all`, apiKey, { context });
+  >(`${host}/api/evaluate/all`, apiKey, context);
 
   if (!data || typeof data !== "object") return {};
 
@@ -49,10 +53,11 @@ export async function fetchFlag(
   key: string,
   context: FlagForgeContext
 ): Promise<boolean> {
+  // Like `/all`, the `/:key` endpoint reads context fields at the body root.
   const data = await post<{ enabled: boolean }>(
     `${host}/api/evaluate/${key}`,
     apiKey,
-    { context }
+    context
   );
   return data.enabled;
 }

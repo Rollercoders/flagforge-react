@@ -18,14 +18,21 @@ describe("fetchAllFlags", () => {
 
     const result = await fetchAllFlags(HOST, API_KEY, CONTEXT);
 
+    // `/all` reads context at the body root, not nested under `context`.
     expect(fetch).toHaveBeenCalledWith(`${HOST}/api/evaluate/all`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${API_KEY}`,
       },
-      body: JSON.stringify({ context: CONTEXT }),
+      body: JSON.stringify(CONTEXT),
     });
+    // Guard against regressing to the nested `{ context }` shape, which the
+    // server ignores on `/all` (targeting silently stops applying).
+    const allBody = JSON.parse(
+      (fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body
+    );
+    expect(allBody).not.toHaveProperty("context");
     expect(result).toEqual({ "flag-a": true, "flag-b": false });
   });
 
@@ -76,6 +83,7 @@ describe("fetchFlag", () => {
 
     const result = await fetchFlag(HOST, API_KEY, "new-dashboard", CONTEXT);
 
+    // `/:key` reads context at the body root, not nested under `context`.
     expect(fetch).toHaveBeenCalledWith(
       `${HOST}/api/evaluate/new-dashboard`,
       {
@@ -84,9 +92,14 @@ describe("fetchFlag", () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
-        body: JSON.stringify({ context: CONTEXT }),
+        body: JSON.stringify(CONTEXT),
       }
     );
+    // Guard against regressing to the nested `{ context }` shape.
+    const keyBody = JSON.parse(
+      (fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body
+    );
+    expect(keyBody).not.toHaveProperty("context");
     expect(result).toBe(true);
   });
 
